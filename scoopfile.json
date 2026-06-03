@@ -1,0 +1,53 @@
+{
+    "apps": [
+        {
+            "Name": "bat",
+            "Info": "",
+            "Updated": "2026-06-03T01:13:31.9739734-03:00",
+            "Source": "main",
+            "Version": "0.26.1"
+        },
+        {
+            "Name": "eza",
+            "Info": "",
+            "Updated": "2026-06-03T01:12:55.5189831-03:00",
+            "Source": "main",
+            "Version": "0.23.4"
+        },
+        {
+            "Name": "lazygit",
+            "Info": "",
+            "Updated": "2026-06-03T01:27:08.6136943-03:00",
+            "Source": "extras",
+            "Version": "0.62.1"
+        },
+        {
+            "Name": "ripgrep",
+            "Info": "",
+            "Updated": "2026-06-03T01:14:00.1766712-03:00",
+            "Source": "main",
+            "Version": "15.1.0"
+        },
+        {
+            "Name": "zoxide",
+            "Info": "",
+            "Updated": "2026-06-03T01:12:38.1564512-03:00",
+            "Source": "main",
+            "Version": "0.9.9"
+        }
+    ],
+    "buckets": [
+        {
+            "Name": "main",
+            "Source": "https://github.com/ScoopInstaller/Main.git",
+            "Updated": "2026-06-02T18:24:44-03:00",
+            "Manifests": 1554
+        },
+        {
+            "Name": "extras",
+            "Source": "https://github.com/ScoopInstaller/Extras",
+            "Updated": "2026-06-02T18:26:11-03:00",
+            "Manifests": 2299
+        }
+    ]
+}
