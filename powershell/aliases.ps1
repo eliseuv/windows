@@ -41,3 +41,19 @@ Set-Alias gg lazygit
 
 # Cargo update shortcut
 Set-Alias cup Update-CargoBinaries
+
+<#
+.SYNOPSIS
+psmux shortcuts
+#>
+function Invoke-PsmuxDefault { psmux attach || psmux new-session }
+Set-Alias t Invoke-PsmuxDefault
+
+function Invoke-PsmuxAttach { psmux attach -t $args }
+Set-Alias ta Invoke-PsmuxAttach
+
+function Invoke-PsmuxNew { psmux new-session }
+Set-Alias tn Invoke-PsmuxNew
+
+function Invoke-PsmuxList { psmux list-sessions }
+Set-Alias tl Invoke-PsmuxList

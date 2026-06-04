@@ -1,8 +1,10 @@
-﻿{
+{
     "packages":  [
                      "bat",
                      "eza",
+                     "psmux",
                      "ripgrep",
+                     "smug",
                      "zoxide"
                  ]
 }
