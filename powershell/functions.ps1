@@ -68,9 +68,23 @@ function Update-CargoBinaries {
     cargo install-update -a
 }
 
+function update-rustup {
+    if (-not (Get-Command rustup -ErrorAction SilentlyContinue)) {
+        Write-Warning "Rustup is not available in the current PATH."
+        return
+    }
+    Write-Host "`n=== Updating Rustup and Toolchains ===" -ForegroundColor Magenta
+    Write-Host "Updating Rustup itself..." -ForegroundColor Cyan
+    rustup self update
+    Write-Host "Updating Rust toolchains..." -ForegroundColor Cyan
+    rustup update
+}
+
 function update-all {
     Write-Host "=== Updating Scoop Packages ===" -ForegroundColor Magenta
     scoop update *
+    
+    update-rustup
     
     Write-Host "`n=== Updating Cargo Binaries ===" -ForegroundColor Magenta
     Update-CargoBinaries
@@ -78,4 +92,6 @@ function update-all {
     Write-Host "`n=== Syncing Declarative State ===" -ForegroundColor Magenta
     scoop export > "$HOME\dotfiles\scoopfile.json"
     Write-Host "scoopfile.json updated." -ForegroundColor Green
+    
+    cargo-sync
 }
