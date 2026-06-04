@@ -1,3 +1,4 @@
+Set-Alias c clear
 function .. { Set-Location .. }
 function ~ { Set-Location ~ }
 Set-Alias touch New-Item
