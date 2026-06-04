@@ -73,3 +73,19 @@ if (Test-Path $ScoopFile) {
     Write-Host "Restoring declarative apps via Scoop..." -ForegroundColor Cyan
     scoop import $ScoopFile
 }
+
+# -----------------------------------------------------------------------------
+# Cargo Update Bootstrap
+# -----------------------------------------------------------------------------
+if (Get-Command cargo -ErrorAction SilentlyContinue) {
+    Write-Host "Checking for cargo-update..." -ForegroundColor Cyan
+    
+    $cargoList = cargo install --list | Out-String
+    if ($cargoList -notmatch "cargo-update v") {
+        Write-Host "cargo-update not found. Compiling and installing..." -ForegroundColor Yellow
+        cargo install cargo-update
+        Write-Host "cargo-update installed successfully." -ForegroundColor Green
+    } else {
+        Write-Host "cargo-update is already installed." -ForegroundColor Green
+    }
+}

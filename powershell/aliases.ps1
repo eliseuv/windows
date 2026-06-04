@@ -9,3 +9,4 @@ function Get-DetailedList { eza -lah }
 Set-Alias ll Get-DetailedList
 Set-Alias grep findstr
 Set-Alias gg lazygit
+Set-Alias cup Update-CargoBinaries
