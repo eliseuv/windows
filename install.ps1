@@ -41,8 +41,8 @@ if (!(Test-Path $ProfileParent)) { New-Item -ItemType Directory -Path $ProfilePa
 
 $RepoMainProfile = Join-Path $RepoRoot "powershell\main.ps1"
 
+Remove-Item $PROFILE -ErrorAction SilentlyContinue
 if ($UseSymlinks) {
-    Remove-Item $PROFILE -ErrorAction SilentlyContinue
     New-Item -ItemType SymbolicLink -Path $PROFILE -Target $RepoMainProfile -Force | Out-Null
     Write-Host " -> Symlinked PowerShell Profile" -ForegroundColor Green
 } else {
@@ -66,8 +66,8 @@ $RepoSettingsPath = Join-Path $RepoRoot "terminal\settings.json"
 if (Test-Path $RepoSettingsPath) {
     if (!(Test-Path $WTSettingsDir)) { New-Item -ItemType Directory -Path $WTSettingsDir -Force | Out-Null }
     
+    Remove-Item $WTSettingsPath -ErrorAction SilentlyContinue
     if ($UseSymlinks) {
-        Remove-Item $WTSettingsPath -ErrorAction SilentlyContinue
         New-Item -ItemType SymbolicLink -Path $WTSettingsPath -Target $RepoSettingsPath -Force | Out-Null
         Write-Host " -> Symlinked Windows Terminal settings" -ForegroundColor Green
     } else {
@@ -76,6 +76,28 @@ if (Test-Path $RepoSettingsPath) {
     }
 } else {
     Write-Warning "Windows Terminal settings not found in repo at $RepoSettingsPath"
+}
+
+<#
+.SYNOPSIS
+Deploy psmux config
+.DESCRIPTION
+Symlinks or copies the psmux configuration to ~/.psmux.conf
+#>
+$PsmuxConfigTarget = Join-Path $HOME ".psmux.conf"
+$RepoPsmuxConfig = Join-Path $RepoRoot "psmux\psmux.conf"
+
+if (Test-Path $RepoPsmuxConfig) {
+    Remove-Item $PsmuxConfigTarget -ErrorAction SilentlyContinue
+    if ($UseSymlinks) {
+        New-Item -ItemType SymbolicLink -Path $PsmuxConfigTarget -Target $RepoPsmuxConfig -Force | Out-Null
+        Write-Host " -> Symlinked psmux config" -ForegroundColor Green
+    } else {
+        Copy-Item -Path $RepoPsmuxConfig -Destination $PsmuxConfigTarget -Force
+        Write-Host " -> Copied psmux config" -ForegroundColor Green
+    }
+} else {
+    Write-Warning "psmux config not found in repo at $RepoPsmuxConfig"
 }
 
 <#
