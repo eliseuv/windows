@@ -88,4 +88,16 @@ if (Get-Command cargo -ErrorAction SilentlyContinue) {
     } else {
         Write-Host "cargo-update is already installed." -ForegroundColor Green
     }
+
+    $CargoFile = Join-Path $RepoRoot "cargofile.json"
+    if (Test-Path $CargoFile) {
+        Write-Host "Restoring Cargo binaries from cargofile.json..." -ForegroundColor Cyan
+        $data = Get-Content $CargoFile | ConvertFrom-Json
+        if ($data.packages) {
+            foreach ($pkg in $data.packages) {
+                Write-Host "Installing Cargo package: $pkg..." -ForegroundColor Cyan
+                cargo install $pkg
+            }
+        }
+    }
 }
