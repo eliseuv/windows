@@ -9,6 +9,7 @@ $Modules = @(
     "env.ps1",
     "aliases.ps1",
     "functions.ps1",
+    "maintenance.ps1",
     "keybindings.ps1"
 )
 
