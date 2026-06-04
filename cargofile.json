@@ -1,0 +1,8 @@
+﻿{
+    "packages":  [
+                     "bat",
+                     "eza",
+                     "ripgrep",
+                     "zoxide"
+                 ]
+}
