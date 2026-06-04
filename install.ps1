@@ -1,14 +1,25 @@
-# =============================================================================
-# install.ps1
-# =============================================================================
+<#
+.SYNOPSIS
+Dotfiles installation and bootstrap script.
+.DESCRIPTION
+Sets up the user environment by symlinking or copying configuration files,
+installing package managers (Scoop, Cargo), and bootstrapping packages
+from declarative files (scoopfile.json, cargofile.json).
+#>
 
 param (
-    # Pass -UseSymlinks to force symbolic linking. 
-    # If omitted, defaults to dot-sourcing and copying.
+    <#
+    .DESCRIPTION
+    Pass -UseSymlinks to force symbolic linking of configuration files. 
+    If omitted, defaults to dot-sourcing and copying as a safer fallback.
+    #>
     [switch]$UseSymlinks
 )
 
-# Robustly resolve the absolute path of the repository
+<#
+.SYNOPSIS
+Robustly resolve the absolute path of the repository
+#>
 $RepoRoot = $PSScriptRoot
 
 Write-Host "Starting dotfiles installation..." -ForegroundColor Cyan
@@ -18,9 +29,13 @@ if ($UseSymlinks) {
     Write-Host "Mode: Safe Fallback (Dot-Sourcing & Copying)" -ForegroundColor Magenta
 }
 
-# -----------------------------------------------------------------------------
-# Deploy PowerShell Profile
-# -----------------------------------------------------------------------------
+<#
+.SYNOPSIS
+Deploy PowerShell Profile
+.DESCRIPTION
+Creates the profile directory if it does not exist and either symlinks
+the dotfiles main.ps1 or dot-sources it directly within the profile.
+#>
 $ProfileParent = Split-Path -Parent $PROFILE
 if (!(Test-Path $ProfileParent)) { New-Item -ItemType Directory -Path $ProfileParent -Force | Out-Null }
 
@@ -31,15 +46,19 @@ if ($UseSymlinks) {
     New-Item -ItemType SymbolicLink -Path $PROFILE -Target $RepoMainProfile -Force | Out-Null
     Write-Host " -> Symlinked PowerShell Profile" -ForegroundColor Green
 } else {
-    # Write the execution command directly into the real profile path
+    <# Write the execution command directly into the real profile path #>
     $ProfileContent = ". `"$RepoMainProfile`""
     Set-Content -Path $PROFILE -Value $ProfileContent -Force
     Write-Host " -> Dot-Sourced PowerShell Profile" -ForegroundColor Green
 }
 
-# -----------------------------------------------------------------------------
-# Deploy Windows Terminal Settings
-# -----------------------------------------------------------------------------
+<#
+.SYNOPSIS
+Deploy Windows Terminal Settings
+.DESCRIPTION
+Locates the LocalState directory for Windows Terminal and symlinks or copies
+the custom settings.json into it.
+#>
 $WTSettingsDir = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState"
 $WTSettingsPath = Join-Path $WTSettingsDir "settings.json"
 $RepoSettingsPath = Join-Path $RepoRoot "terminal\settings.json"
@@ -59,9 +78,13 @@ if (Test-Path $RepoSettingsPath) {
     Write-Warning "Windows Terminal settings not found in repo at $RepoSettingsPath"
 }
 
-# -----------------------------------------------------------------------------
-# Handle Scoop Installation & Restore
-# -----------------------------------------------------------------------------
+<#
+.SYNOPSIS
+Handle Scoop Installation & Restore
+.DESCRIPTION
+Automatically installs Scoop to the user space if missing, and restores
+apps from scoopfile.json if available.
+#>
 if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
     Write-Host "Installing Scoop to user space..." -ForegroundColor Cyan
     Set-ExecutionPolicy RemoteSigned -Scope Process -Force
@@ -74,9 +97,13 @@ if (Test-Path $ScoopFile) {
     scoop import $ScoopFile
 }
 
-# -----------------------------------------------------------------------------
-# Cargo Update Bootstrap
-# -----------------------------------------------------------------------------
+<#
+.SYNOPSIS
+Cargo Update Bootstrap
+.DESCRIPTION
+Ensures cargo-update is installed and bootstraps Cargo binaries based
+on the declarative cargofile.json manifest.
+#>
 if (Get-Command cargo -ErrorAction SilentlyContinue) {
     Write-Host "Checking for cargo-update..." -ForegroundColor Cyan
     

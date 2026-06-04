@@ -1,10 +1,22 @@
+<#
+.SYNOPSIS
+Main entry point for the PowerShell profile.
+.DESCRIPTION
+This script orchestrates the loading of all other profile modules and initializes core tools
+like Starship and Zoxide. It is typically dot-sourced from the user's primary profile.
+#>
+
+# Determine the dotfiles directory robustly
 $ScriptItem = Get-Item $PSCommandPath
 if ($ScriptItem.Target) {
+    # If symlinked, resolve to the actual target directory
     $DotfilesDir = Split-Path -Parent $ScriptItem.Target
 } else {
+    # Otherwise, use the script's directory
     $DotfilesDir = $PSScriptRoot
 }
 
+# Define the list of modules to load
 $Modules = @(
     "env.ps1",
     "aliases.ps1",
@@ -13,6 +25,7 @@ $Modules = @(
     "keybindings.ps1"
 )
 
+# Load each module sequentially
 foreach ($file in $Modules) {
     $filePath = Join-Path $DotfilesDir $file
     if (Test-Path $filePath) {
@@ -23,15 +36,15 @@ foreach ($file in $Modules) {
 }
 
 # =============================================================================
-# Tools
+# Tools Initialization
 # =============================================================================
 
-# Starship
+# Initialize Starship prompt if installed
 if (Get-Command starship -ErrorAction SilentlyContinue) {
     Invoke-Expression (&starship init powershell)
 }
 
-# Zoxide
+# Initialize Zoxide (smarter cd) if installed
 if (Get-Command zoxide -ErrorAction SilentlyContinue) {
     Invoke-Expression (& { (zoxide init powershell | Out-String) })
 }
