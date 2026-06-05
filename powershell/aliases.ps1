@@ -20,6 +20,9 @@ Navigates to the user's home directory.
 #>
 function ~ { Set-Location ~ }
 
+# batcat
+Set-Alias b bat
+
 # Standard Unix-like aliases for file management
 Set-Alias touch New-Item
 Set-Alias rm Remove-Item
