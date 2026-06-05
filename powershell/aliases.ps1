@@ -42,6 +42,9 @@ Set-Alias gg lazygit
 # Cargo update shortcut
 Set-Alias cup Update-CargoBinaries
 
+# Update everything shortcut
+Set-Alias up update-all
+
 <#
 .SYNOPSIS
 psmux shortcuts
