@@ -24,9 +24,9 @@ function ~ { Set-Location ~ }
 Set-Alias b bat
 
 # Standard Unix-like aliases for file management
-Set-Alias touch New-Item
-Set-Alias rm Remove-Item
-Set-Alias mv Move-Item
+Set-Alias touch New-Item -Force -ErrorAction SilentlyContinue
+Set-Alias rm Remove-Item -Force -ErrorAction SilentlyContinue
+Set-Alias mv Move-Item -Force -ErrorAction SilentlyContinue
 
 # Map 'l' and 'll' to use 'eza' for modern directory listing
 Set-Alias l eza
@@ -52,7 +52,7 @@ Set-Alias up update-all
 .SYNOPSIS
 psmux shortcuts
 #>
-function Invoke-PsmuxDefault { psmux attach || psmux new-session }
+function Invoke-PsmuxDefault { psmux attach; if ($LASTEXITCODE -ne 0) { psmux new-session } }
 Set-Alias t Invoke-PsmuxDefault
 
 function Invoke-PsmuxAttach { psmux attach -t $args }
