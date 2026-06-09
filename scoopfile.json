@@ -1,67 +1,39 @@
 {
     "apps": [
         {
-            "Name": "bat",
-            "Updated": "2026-06-03T22:45:50.4627755-03:00",
-            "Info": "",
-            "Source": "main",
-            "Version": "0.26.1"
-        },
-        {
-            "Name": "eza",
-            "Updated": "2026-06-03T22:45:53.028178-03:00",
-            "Info": "",
-            "Source": "main",
-            "Version": "0.23.4"
-        },
-        {
-            "Name": "fzf",
             "Updated": "2026-06-05T08:52:36.9465088-03:00",
-            "Info": "",
+            "Version": "0.73.1",
             "Source": "main",
-            "Version": "0.73.1"
+            "Name": "fzf",
+            "Info": ""
         },
         {
-            "Name": "lazygit",
             "Updated": "2026-06-03T22:45:25.8211603-03:00",
-            "Info": "",
+            "Version": "0.62.1",
             "Source": "extras",
-            "Version": "0.62.1"
+            "Name": "lazygit",
+            "Info": ""
         },
         {
-            "Name": "psmux",
             "Updated": "2026-06-04T15:38:20.413005-03:00",
-            "Info": "",
+            "Version": "3.3.5",
             "Source": "main",
-            "Version": "3.3.5"
-        },
-        {
-            "Name": "ripgrep",
-            "Updated": "2026-06-03T22:45:55.1711502-03:00",
-            "Info": "",
-            "Source": "main",
-            "Version": "15.1.0"
-        },
-        {
-            "Name": "zoxide",
-            "Updated": "2026-06-03T22:45:56.1718832-03:00",
-            "Info": "",
-            "Source": "main",
-            "Version": "0.9.9"
+            "Name": "psmux",
+            "Info": ""
         }
     ],
     "buckets": [
         {
             "Name": "main",
             "Source": "https://github.com/ScoopInstaller/Main.git",
-            "Updated": "2026-06-05T07:50:01-03:00",
-            "Manifests": 1564
+            "Updated": "2026-06-09T06:32:24-03:00",
+            "Manifests": 1568
         },
         {
             "Name": "extras",
             "Source": "https://github.com/ScoopInstaller/Extras",
-            "Updated": "2026-06-05T06:32:01-03:00",
-            "Manifests": 2300
+            "Updated": "2026-06-09T06:31:29-03:00",
+            "Manifests": 2301
         }
     ]
 }
