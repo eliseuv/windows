@@ -3,8 +3,13 @@
     "bat",
     "cargo-update",
     "eza",
+    "fclones",
+    "fd-find",
+    "git-delta",
     "psmux",
     "ripgrep",
+    "starship",
+    "watchexec-cli",
     "zoxide"
   ]
 }
