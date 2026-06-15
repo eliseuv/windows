@@ -48,6 +48,7 @@ function Add-ToPath {
 }
 
 # Add common local bin directories to the PATH
+Add-ToPath (Join-Path $HOME "bin")
 Add-ToPath (Join-Path $HOME ".local\bin")
 
 # Add language package managers and toolchains
