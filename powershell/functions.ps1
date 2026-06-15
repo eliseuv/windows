@@ -32,10 +32,28 @@ function Install-LocalTool {
         New-Item -ItemType Directory -Path $binDir | Out-Null
     }
 
+    $lockfile = Join-Path $HOME "dotfiles\localtools.json"
+    $localTools = @()
+    if (Test-Path $lockfile) {
+        $content = Get-Content $lockfile -Raw
+        if (-not [string]::IsNullOrWhiteSpace($content)) {
+            $localTools = $content | ConvertFrom-Json
+            if ($localTools -isnot [array]) { $localTools = @($localTools) }
+        }
+    }
+
     if ([string]::IsNullOrWhiteSpace($Path)) {
         if (Test-Path "Cargo.toml") {
             Write-Host "Cargo.toml found. Installing via cargo to $binDir..."
             cargo install --path . --root $HOME
+
+            $projectPath = (Get-Item .).FullName
+            $existing = $localTools | Where-Object { $_.type -eq 'cargo' -and $_.path -eq $projectPath }
+            if (-not $existing) {
+                $localTools += [PSCustomObject]@{ type = 'cargo'; path = $projectPath }
+                $localTools | ConvertTo-Json -Depth 3 | Out-File $lockfile -Encoding utf8
+                Write-Host "Added $projectPath to localtools.json"
+            }
         } else {
             Write-Warning "Please provide a path to an executable, or run this in a Cargo project directory."
         }
@@ -44,6 +62,14 @@ function Install-LocalTool {
             $dest = Join-Path $binDir (Split-Path $Path -Leaf)
             Copy-Item -Path $Path -Destination $dest -Force
             Write-Host "Installed $(Split-Path $Path -Leaf) to $binDir"
+
+            $binaryPath = (Resolve-Path $Path).Path
+            $existing = $localTools | Where-Object { $_.type -eq 'binary' -and $_.path -eq $binaryPath }
+            if (-not $existing) {
+                $localTools += [PSCustomObject]@{ type = 'binary'; path = $binaryPath }
+                $localTools | ConvertTo-Json -Depth 3 | Out-File $lockfile -Encoding utf8
+                Write-Host "Added $binaryPath to localtools.json"
+            }
         } else {
             Write-Error "Executable file not found: $Path"
         }

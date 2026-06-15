@@ -114,6 +114,58 @@ function update-rustup {
     rustup update
 }
 
+function Update-LocalTools {
+    <#
+    .SYNOPSIS
+    Updates all local tools tracked in localtools.json.
+    .DESCRIPTION
+    Reads localtools.json and updates each tracked tool. Cargo projects are rebuilt and reinstalled,
+    while binary paths are simply re-copied to ~/bin.
+    #>
+    Write-Host "`n=== Updating Local Tools ===" -ForegroundColor Magenta
+    $lockfile = Join-Path $HOME "dotfiles\localtools.json"
+    $binDir = Join-Path $HOME "bin"
+    
+    if (-not (Test-Path $lockfile)) {
+        Write-Host "No local tools to update (localtools.json not found)."
+        return
+    }
+
+    $content = Get-Content $lockfile -Raw
+    if ([string]::IsNullOrWhiteSpace($content)) {
+        Write-Host "localtools.json is empty."
+        return
+    }
+
+    $localTools = $content | ConvertFrom-Json
+    if ($localTools -isnot [array]) { $localTools = @($localTools) }
+
+    foreach ($tool in $localTools) {
+        if ($tool.type -eq 'cargo') {
+            if (Test-Path $tool.path) {
+                Write-Host "Updating local Cargo tool from: $($tool.path)" -ForegroundColor Cyan
+                Push-Location $tool.path
+                try {
+                    cargo install --path . --root $HOME
+                } finally {
+                    Pop-Location
+                }
+            } else {
+                Write-Warning "Cargo project path not found: $($tool.path)"
+            }
+        } elseif ($tool.type -eq 'binary') {
+            if (Test-Path $tool.path -PathType Leaf) {
+                Write-Host "Updating local binary tool from: $($tool.path)" -ForegroundColor Cyan
+                $dest = Join-Path $binDir (Split-Path $tool.path -Leaf)
+                Copy-Item -Path $tool.path -Destination $dest -Force
+            } else {
+                Write-Warning "Binary path not found: $($tool.path)"
+            }
+        }
+    }
+    Write-Host "Local tools updated." -ForegroundColor Green
+}
+
 function update-all {
     <#
     .SYNOPSIS
@@ -130,6 +182,8 @@ function update-all {
     
     Write-Host "`n=== Updating Cargo Binaries ===" -ForegroundColor Magenta
     Update-CargoBinaries
+    
+    Update-LocalTools
     
     Write-Host "`n=== Syncing Declarative State ===" -ForegroundColor Magenta
     scoop export > "$HOME\dotfiles\scoopfile.json"
